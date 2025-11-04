@@ -12,7 +12,7 @@ export default function MoPro() {
         <p className="mb-4">
           MoPro (Mobile Proving) is a framework that brings zero-knowledge proof capabilities to mobile platforms. 
           It provides cross-platform support for iOS, Android, and Web with multiple ZK backends including Circom, 
-          Halo2, and Noir.
+          and Noir.
         </p>
         <p className="mb-4">
           In Deimos, MoPro is used to run benchmarks on actual mobile devices, measuring real-world performance 
@@ -26,7 +26,7 @@ export default function MoPro() {
           <pre className="text-sm">
 {`┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
 │   Kotlin/Swift  │───▶│   Rust FFI       │───▶│  ZK Circuits    │
-│   (Mobile App)  │    │   (UniFFI)       │    │  (Circom/Halo2) │
+│   (Mobile App)  │    │   (UniFFI)       │    │  (Circom/Noir)  │
 └─────────────────┘    └──────────────────┘    └─────────────────┘`}
           </pre>
         </div>
@@ -36,7 +36,7 @@ export default function MoPro() {
         <ul className="list-disc ml-6 mb-4">
           <li><strong>Mobile App Layer:</strong> Kotlin (Android) or Swift (iOS) UI and benchmarking logic</li>
           <li><strong>FFI Layer:</strong> Rust code with UniFFI bindings for type-safe cross-language communication</li>
-          <li><strong>Circuit Layer:</strong> Compiled ZK circuits (Circom, Halo2, or Noir)</li>
+          <li><strong>Circuit Layer:</strong> Compiled ZK circuits (Circom or Noir)</li>
         </ul>
       </section>
 

@@ -38,7 +38,7 @@ export default function BenchmarksPage() {
           </h1>
           <p className="text-lg text-[#605A57] max-w-4xl mx-auto leading-relaxed">
             We're building a comprehensive zkVM benchmarking application using <strong>zkmopro</strong> and <strong>Flutter</strong> 
-            to mobile benchmark major zero-knowledge frameworks like <strong>Halo2</strong>, <strong>Noir</strong>, and <strong>Circom</strong> 
+            to mobile benchmark major zero-knowledge frameworks like <strong>Noir</strong> and <strong>Circom</strong> 
             on various cryptographic hashing algorithms including <strong>Poseidon</strong>, <strong>SHA256</strong>, <strong>Keccak</strong>, and more.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
@@ -47,9 +47,6 @@ export default function BenchmarksPage() {
             </div>
             <div className="px-4 py-2 bg-white rounded-full shadow-sm border border-[#E0DEDB]">
               <span className="text-sm font-medium text-[#37322F]">📱 Flutter</span>
-            </div>
-            <div className="px-4 py-2 bg-white rounded-full shadow-sm border border-[#E0DEDB]">
-              <span className="text-sm font-medium text-[#37322F]">⚡ Halo2</span>
             </div>
             <div className="px-4 py-2 bg-white rounded-full shadow-sm border border-[#E0DEDB]">
               <span className="text-sm font-medium text-[#37322F]">🎯 Noir</span>

@@ -167,7 +167,7 @@ export default function LandingPage() {
                               <div className="grid grid-cols-3 gap-3 sm:gap-4 text-sm">
                                 <div className="bg-white/90 p-3 rounded-xl shadow-sm border border-blue-100 hover:shadow-md transition-shadow backdrop-blur-sm">
                                   <div className="font-semibold text-blue-600 flex items-center gap-1">
-                                    ⚡ Halo2
+                                    📱 Flutter
                                   </div>
                                   <div className="text-[#605A57] text-xs">2.3s avg</div>
                                   <div className="w-full bg-blue-100 rounded-full h-1 mt-2">
@@ -253,7 +253,7 @@ export default function LandingPage() {
                               <p className="text-[#605A57] mb-6 text-sm sm:text-base">Comprehensive testing across major frameworks</p>
                               <div className="flex justify-center flex-wrap gap-3">
                                 <div className="px-4 py-2 bg-white/90 rounded-full text-sm font-medium border border-blue-200 hover:border-blue-300 transition-colors backdrop-blur-sm">
-                                  <span className="text-blue-600">⚡</span> Halo2
+                                  <span className="text-blue-600">📱</span> Flutter
                                 </div>
                                 <div className="px-4 py-2 bg-white/90 rounded-full text-sm font-medium border border-purple-200 hover:border-purple-300 transition-colors backdrop-blur-sm">
                                   <span className="text-purple-600">🎯</span> Noir
@@ -302,7 +302,7 @@ export default function LandingPage() {
                   />
                   <FeatureCard
                     title="Framework Coverage"
-                    description="Comprehensive support for major ZK frameworks including Halo2, Noir, and Circom."
+                    description="Comprehensive support for major ZK frameworks including Noir and Circom."
                     isActive={activeCard === 2}
                     progress={activeCard === 2 ? progress : 0}
                     onClick={() => handleCardClick(2)}
@@ -380,10 +380,10 @@ export default function LandingPage() {
                         logo: "/mopro.svg"
                       },
                       { 
-                        name: "Halo2", 
-                        description: "ZK Circuit Framework",
-                        link: "https://github.com/zcash/halo2",
-                        logo: "/halo2.png"
+                        name: "Flutter", 
+                        description: "Cross-Platform Mobile",
+                        link: "https://flutter.dev/",
+                        logo: "/flutter.svg"
                       },
                       { 
                         name: "Noir", 
@@ -425,7 +425,6 @@ export default function LandingPage() {
                               alt={`${tech.name} logo`}
                               className={`object-contain filter group-hover:brightness-110 transition-all duration-300 drop-shadow-sm ${
                                 tech.name === 'zkmopro' ? 'w-[120%] h-[120%]' : 
-                                tech.name === 'Halo2' ? 'w-[80%] h-[80%]' : 
                                 'w-full h-full'
                               }`}
                             />
@@ -551,7 +550,7 @@ export default function LandingPage() {
                           Multi-framework Integration
                         </h3>
                         <p className="text-[#605A57] text-sm md:text-base font-normal leading-relaxed font-sans">
-                          Seamless integration with major ZK frameworks including Halo2, Noir, and Circom for comprehensive testing coverage.
+                          Seamless integration with major ZK frameworks including Noir and Circom for comprehensive testing coverage.
                         </p>
                       </div>
                       <div className="w-full h-[200px] sm:h-[250px] md:h-[300px] rounded-lg flex overflow-hidden justify-center items-center relative bg-gradient-to-br from-purple-50 to-pink-50">
@@ -569,7 +568,7 @@ export default function LandingPage() {
                           Cryptographic Algorithm Testing
                         </h3>
                         <p className="text-[#605A57] text-sm md:text-base font-normal leading-relaxed font-sans">
-                          Comprehensive testing across various hashing algorithms including Poseidon, SHA256, and Keccak with detailed performance analysis.
+                          Comprehensive testing across various hashing algorithms including Poseidon, SHA256 and Keccak with detailed performance analysis.
                         </p>
                       </div>
                       <div className="w-full h-[200px] sm:h-[250px] md:h-[300px] rounded-lg flex overflow-hidden items-center justify-center relative bg-gradient-to-br from-orange-50 to-red-50">
