@@ -37,7 +37,7 @@ export default function BenchmarksPage() {
             zkVM Mobile <span className="text-blue-600">Benchmarking</span>
           </h1>
           <p className="text-lg text-[#605A57] max-w-4xl mx-auto leading-relaxed">
-            We're building a comprehensive zkVM benchmarking application using <strong>zkmopro</strong> and <strong>Flutter</strong> 
+            We&apos;re building a comprehensive zkVM benchmarking application using <strong>zkmopro</strong> and <strong>Flutter</strong> 
             to mobile benchmark major zero-knowledge frameworks like <strong>Noir</strong> and <strong>Circom</strong> 
             on various cryptographic hashing algorithms including <strong>Poseidon</strong>, <strong>SHA256</strong>, <strong>Keccak</strong>, and more.
           </p>
