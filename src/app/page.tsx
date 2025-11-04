@@ -628,9 +628,6 @@ export default function LandingPage() {
               {/* Footer */}
               <div className="w-full py-8 sm:py-12 md:py-16 border-t border-[rgba(55,50,47,0.12)] flex justify-center items-center">
                 <div className="text-center">
-                  <div className="text-[#605A57] text-sm mb-4">
-                    © 2025 Deimos. Built by BlocSoc IITR.
-                  </div>
                   <div className="flex justify-center gap-6">
                     <Link href="https://github.com/blocsoc-iitr/deimos" target="_blank" rel="noopener noreferrer" className="text-[#605A57] hover:text-[#37322F] transition-colors">
                       GitHub
