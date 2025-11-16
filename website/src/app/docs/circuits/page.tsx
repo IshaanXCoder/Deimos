@@ -1,5 +1,7 @@
 'use client';
 
+import { EnhancedCodeBlock } from '@/components/ui/code-block';
+
 export default function Circuits() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-12">
@@ -18,8 +20,12 @@ export default function Circuits() {
         <p className="mb-4">
           All hash circuits in Deimos follow this standard pattern:
         </p>
-        <div className="bg-gray-50 p-4 rounded mb-4">
-          <pre className="text-sm overflow-x-auto">
+        <EnhancedCodeBlock 
+          language="circom" 
+          title="Circuit Template"
+          showLineNumbers={true}
+          className="mb-4"
+        >
 {`pragma circom 2.0.0;
 
 include "./hash_function.circom";
@@ -34,8 +40,7 @@ template HashBench(N) {
 }
 
 component main {public[in]} = HashBench(32);`}
-          </pre>
-        </div>
+        </EnhancedCodeBlock>
         <p className="mb-4">
           Key points:
         </p>
