@@ -1,5 +1,7 @@
 'use client';
 
+import { EnhancedCodeBlock } from '@/components/ui/code-block';
+
 export default function Contributing() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-12">
@@ -109,8 +111,7 @@ export default function Contributing() {
         <h2 className="text-2xl font-bold mb-4">Development Workflow</h2>
         
         <h3 className="text-xl font-bold mb-2">1. Fork and Clone</h3>
-        <div className="bg-gray-50 p-4 rounded mb-4">
-          <pre className="text-sm overflow-x-auto">
+          <EnhancedCodeBlock language="Bash">
 {`# Fork the repository on GitHub
 # Then clone your fork
 git clone https://github.com/YOUR_USERNAME/Deimos.git
@@ -118,24 +119,20 @@ cd Deimos
 
 # Add upstream remote
 git remote add upstream https://github.com/BlocSoc-iitr/Deimos.git`}
-          </pre>
-        </div>
+          </EnhancedCodeBlock>
 
         <h3 className="text-xl font-bold mb-2">2. Keep Your Fork Updated</h3>
-        <div className="bg-gray-50 p-4 rounded mb-4">
-          <pre className="text-sm overflow-x-auto">
+          <EnhancedCodeBlock language="Bash">
 {`# Fetch latest changes from upstream
 git fetch upstream
 
 # Update your local dev branch
 git checkout dev
 git pull --rebase upstream dev`}
-          </pre>
-        </div>
+          </EnhancedCodeBlock>
 
         <h3 className="text-xl font-bold mb-2">3. Create a Feature Branch</h3>
-        <div className="bg-gray-50 p-4 rounded mb-4">
-          <pre className="text-sm overflow-x-auto">
+          <EnhancedCodeBlock language="Bash">
 {`# Branch from dev
 git checkout dev
 git checkout -b fix/some-bug-short-description-#123
@@ -144,8 +141,7 @@ git checkout -b fix/some-bug-short-description-#123
 git checkout -b feature/new-feature-description-#123
 
 # Note: Postfixing #123 associates your PR with issue #123`}
-          </pre>
-        </div>
+          </EnhancedCodeBlock>
 
         <h3 className="text-xl font-bold mb-2">4. Make Your Changes</h3>
         <ul className="list-disc ml-6 mb-4">
@@ -157,8 +153,7 @@ git checkout -b feature/new-feature-description-#123
         </ul>
 
         <h3 className="text-xl font-bold mb-2">5. Test Your Changes</h3>
-        <div className="bg-gray-50 p-4 rounded mb-4">
-          <pre className="text-sm overflow-x-auto">
+          <EnhancedCodeBlock language="Bash">
 {`# For Rust code
 cd your-app-location
 cargo fmt --all -- --check
@@ -176,12 +171,10 @@ npm run lint
 
 # Check for typos
 typos`}
-          </pre>
-        </div>
+          </EnhancedCodeBlock>
 
         <h3 className="text-xl font-bold mb-2">6. Commit and Push</h3>
-        <div className="bg-gray-50 p-4 rounded mb-4">
-          <pre className="text-sm overflow-x-auto">
+          <EnhancedCodeBlock className="text-sm overflow-x-auto">
 {`# Stage your changes
 git add src/file.rs
 
@@ -190,8 +183,7 @@ git commit -m "Fix some bug short description #123"
 
 # Push to your fork
 git push origin -u fix/some-bug-short-description-#123`}
-          </pre>
-        </div>
+          </EnhancedCodeBlock>
 
         <h3 className="text-xl font-bold mb-2">7. Create Pull Request</h3>
         <ul className="list-disc ml-6 mb-4">
@@ -209,14 +201,12 @@ git push origin -u fix/some-bug-short-description-#123`}
           Maintainers will review your code and may request changes. Please pay attention to feedback 
           as it&apos;s necessary to maintain code quality standards.
         </p>
-        <div className="bg-gray-50 p-4 rounded mb-4">
-          <pre className="text-sm overflow-x-auto">
+          <EnhancedCodeBlock language="Bash">
 {`# Make requested changes
 git add modified_files
 git commit -m "Address review feedback"
 git push origin fix/some-bug-short-description-#123`}
-          </pre>
-        </div>
+          </EnhancedCodeBlock>
       </section>
 
       <section className="mb-12">

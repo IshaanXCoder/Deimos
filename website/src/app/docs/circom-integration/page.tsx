@@ -74,9 +74,7 @@ rust_witness::witness!(blake2s256);  // <- Add your new circuit`}
 
         <h3 className="text-xl font-bold mb-2 mt-6">Step 2: Build and Update MoPro Bindings</h3>
         <EnhancedCodeBlock 
-          language="bash" 
-          title="Build MoPro Bindings"
-          className="mb-4"
+          language="Bash" 
         >
 {`# Navigate to the mopro-example-app directory
 cd mopro-example-app
@@ -94,9 +92,7 @@ mopro update`}
           Copy your circuit&apos;s proving key to the Flutter assets directory:
         </p>
         <EnhancedCodeBlock 
-          language="bash" 
-          title="Copy Circuit Files"
-          className="mb-4"
+          language="Bash" 
         >
 {`# Copy your .zkey file from the Circom build
 cp ../frameworks/circom/circuits/blake2s256/blake2s256_0000.zkey flutter/assets/blake2s256.zkey`}
