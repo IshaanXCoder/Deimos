@@ -3,6 +3,7 @@
 *.a
 *.dylib
 *.dll
+*.DS_STORE
 
 MoproAndroidBindings
 
