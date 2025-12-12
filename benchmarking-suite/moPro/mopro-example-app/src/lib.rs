@@ -25,6 +25,7 @@ pub use error::MoproError;
 mod circom;
 
 rust_witness::witness!(blake2s256);
+rust_witness::witness!(blake3);
 rust_witness::witness!(keccak);
 rust_witness::witness!(mimc256);
 rust_witness::witness!(pedersen);
@@ -34,6 +35,7 @@ rust_witness::witness!(sha256);
 
 set_circom_circuits! {
     ("blake2s256.zkey", circom_prover::witness::WitnessFn::RustWitness(blake2s256_witness)),
+    ("blake3.zkey", circom_prover::witness::WitnessFn::RustWitness(blake3_witness)),
     ("keccak.zkey", circom_prover::witness::WitnessFn::RustWitness(keccak_witness)),
     ("mimc256.zkey", circom_prover::witness::WitnessFn::RustWitness(mimc256_witness)),
     ("pedersen.zkey", circom_prover::witness::WitnessFn::RustWitness(pedersen_witness)),

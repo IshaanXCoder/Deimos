@@ -87,6 +87,7 @@ flutter:
     - assets/blake2.srs
     - assets/blake3.json
     - assets/blake3.srs
+    - assets/blake3.zkey
     - inputs/input_1.json
     - inputs/input_2.json
     - inputs/input_3.json

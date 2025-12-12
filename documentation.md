@@ -27,6 +27,7 @@ Deimos currently supports **MoPro** with the following frameworks and circuits:
 - SHA-256
 - Keccak-256
 - BLAKE2s-256
+- BLAKE3
 - MiMC-256
 - Pedersen
 - Poseidon
@@ -71,7 +72,7 @@ The mobile app currently uses the **MoPro framework**, which enables cross-platf
 
 The circuit layer supports multiple frameworks with a consistent structure:
 
-- **Circom Circuits**: Located in `benchmarking-suite/frameworks/circom/circuits/` with implementations for SHA-256, Keccak-256, BLAKE2s, Poseidon, MiMC, and Pedersen
+- **Circom Circuits**: Located in `benchmarking-suite/frameworks/circom/circuits/` with implementations for SHA-256, Keccak-256, BLAKE2s, BLAKE3, Poseidon, MiMC, and Pedersen
 - **Noir Circuits**: Located in `benchmarking-suite/frameworks/noir/circuits/`
 
 Each circuit follows a byte-to-bits conversion pattern with proper bit ordering considerations (MSB-first for SHA-256, LSB-first for Keccak-256).
@@ -184,6 +185,7 @@ The project includes implementations for multiple cryptographic primitives:
 - **SHA-256**: Standard cryptographic hash (MSB-first bit ordering)
 - **Keccak-256**: Ethereum-compatible hash (LSB-first bit ordering)
 - **BLAKE2s-256**: Fast cryptographic hash
+- **BLAKE3**: High-performance cryptographic hash function optimized for parallel processing
 - **Poseidon**: ZK-friendly hash function
 - **MiMC-256**: Minimal multiplicative complexity
 - **Pedersen**: Hash function for commitment schemes

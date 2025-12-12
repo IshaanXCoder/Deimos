@@ -770,7 +770,7 @@ class _MainSelectionPageState extends State<MainSelectionPage> {
   List<String> _getAlgorithmsForFramework(String framework) {
     switch (framework) {
       case 'circom':
-        return ['SHA256', 'Keccak256', 'Blake2s256', 'MiMC256', 'Pedersen', 'Poseidon'];
+        return ['SHA256', 'Keccak256', 'Blake2s256', 'Blake3', 'MiMC256', 'Pedersen', 'Poseidon'];
       case 'halo2':
         return ['Fibonacci'];
       case 'noir':
@@ -1618,10 +1618,21 @@ class _ProofResultPageState extends State<ProofResultPage> {
     // Get the appropriate zkey path based on algorithm
     final zkeyPath = _getZkeyPath();
     
-    // Capture memory and battery BEFORE proof generation
-    _freeMemoryBeforeProof = SysInfo.getFreePhysicalMemory();
-    final battery = Battery();
-    _batteryBeforeProof = await battery.batteryLevel;
+    // Capture memory and battery BEFORE proof generation (with error handling)
+    try {
+      _freeMemoryBeforeProof = SysInfo.getFreePhysicalMemory();
+    } catch (e) {
+      debugPrint('Error getting memory info: $e');
+      _freeMemoryBeforeProof = 0;
+    }
+    
+    try {
+      final battery = Battery();
+      _batteryBeforeProof = await battery.batteryLevel;
+    } catch (e) {
+      debugPrint('Error getting battery level: $e');
+      _batteryBeforeProof = 0;
+    }
     
     // Start timing
     final stopwatch = Stopwatch()..start();
@@ -1638,18 +1649,32 @@ class _ProofResultPageState extends State<ProofResultPage> {
     
     stopwatch.stop();
     
-    // Capture memory and battery AFTER proof generation
-    _freeMemoryAfterProof = SysInfo.getFreePhysicalMemory();
-    _batteryAfterProof = await battery.batteryLevel;
+    // Capture memory and battery AFTER proof generation (with error handling)
+    try {
+      _freeMemoryAfterProof = SysInfo.getFreePhysicalMemory();
+    } catch (e) {
+      debugPrint('Error getting memory info after proof: $e');
+      _freeMemoryAfterProof = 0;
+    }
+    
+    try {
+      final battery = Battery();
+      _batteryAfterProof = await battery.batteryLevel;
+    } catch (e) {
+      debugPrint('Error getting battery level after proof: $e');
+      _batteryAfterProof = 0;
+    }
     
     if (proofResult == null) {
       throw Exception('Failed to generate Circom proof');
     }
     
-    setState(() {
-      _circomProofResult = proofResult;
-      _proofGenerationTime = stopwatch.elapsed;
-    });
+    if (mounted) {
+      setState(() {
+        _circomProofResult = proofResult;
+        _proofGenerationTime = stopwatch.elapsed;
+      });
+    }
     
     return _formatCircomProofOutput(proofResult);
   }
@@ -1661,10 +1686,21 @@ class _ProofResultPageState extends State<ProofResultPage> {
       "out": [inputData.join(" ")]
     };
     
-    // Capture memory and battery BEFORE proof generation
-    _freeMemoryBeforeProof = SysInfo.getFreePhysicalMemory();
-    final battery = Battery();
-    _batteryBeforeProof = await battery.batteryLevel;
+    // Capture memory and battery BEFORE proof generation (with error handling)
+    try {
+      _freeMemoryBeforeProof = SysInfo.getFreePhysicalMemory();
+    } catch (e) {
+      debugPrint('Error getting memory info: $e');
+      _freeMemoryBeforeProof = 0;
+    }
+    
+    try {
+      final battery = Battery();
+      _batteryBeforeProof = await battery.batteryLevel;
+    } catch (e) {
+      debugPrint('Error getting battery level: $e');
+      _batteryBeforeProof = 0;
+    }
     
     // Start timing
     final stopwatch = Stopwatch()..start();
@@ -1682,19 +1718,33 @@ class _ProofResultPageState extends State<ProofResultPage> {
     // Stop timing and store
     stopwatch.stop();
     
-    // Capture memory and battery AFTER proof generation
-    _freeMemoryAfterProof = SysInfo.getFreePhysicalMemory();
-    _batteryAfterProof = await battery.batteryLevel;
+    // Capture memory and battery AFTER proof generation (with error handling)
+    try {
+      _freeMemoryAfterProof = SysInfo.getFreePhysicalMemory();
+    } catch (e) {
+      debugPrint('Error getting memory info after proof: $e');
+      _freeMemoryAfterProof = 0;
+    }
+    
+    try {
+      final battery = Battery();
+      _batteryAfterProof = await battery.batteryLevel;
+    } catch (e) {
+      debugPrint('Error getting battery level after proof: $e');
+      _batteryAfterProof = 0;
+    }
     
     if (proofResult == null) {
       throw Exception('Failed to generate Halo2 proof');
     }
     
     // Store the proof result for verification
-    setState(() {
-      _halo2ProofResult = proofResult;
-      _proofGenerationTime = stopwatch.elapsed;
-    });
+    if (mounted) {
+      setState(() {
+        _halo2ProofResult = proofResult;
+        _proofGenerationTime = stopwatch.elapsed;
+      });
+    }
     
     // Format the actual proof data
     return _formatHalo2ProofOutput(proofResult);
@@ -1708,10 +1758,21 @@ class _ProofResultPageState extends State<ProofResultPage> {
     // Get the appropriate circuit path and settings
     final (circuitPath, srsPath, onChain, vk) = await _getNoirSettings();
     
-    // Capture memory and battery BEFORE proof generation
-    _freeMemoryBeforeProof = SysInfo.getFreePhysicalMemory();
-    final battery = Battery();
-    _batteryBeforeProof = await battery.batteryLevel;
+    // Capture memory and battery BEFORE proof generation (with error handling)
+    try {
+      _freeMemoryBeforeProof = SysInfo.getFreePhysicalMemory();
+    } catch (e) {
+      debugPrint('Error getting memory info: $e');
+      _freeMemoryBeforeProof = 0;
+    }
+    
+    try {
+      final battery = Battery();
+      _batteryBeforeProof = await battery.batteryLevel;
+    } catch (e) {
+      debugPrint('Error getting battery level: $e');
+      _batteryBeforeProof = 0;
+    }
     
     // Start timing
     final stopwatch = Stopwatch()..start();
@@ -1732,15 +1793,29 @@ class _ProofResultPageState extends State<ProofResultPage> {
     // Stop timing and store
     stopwatch.stop();
     
-    // Capture memory and battery AFTER proof generation
-    _freeMemoryAfterProof = SysInfo.getFreePhysicalMemory();
-    _batteryAfterProof = await battery.batteryLevel;
+    // Capture memory and battery AFTER proof generation (with error handling)
+    try {
+      _freeMemoryAfterProof = SysInfo.getFreePhysicalMemory();
+    } catch (e) {
+      debugPrint('Error getting memory info after proof: $e');
+      _freeMemoryAfterProof = 0;
+    }
+    
+    try {
+      final battery = Battery();
+      _batteryAfterProof = await battery.batteryLevel;
+    } catch (e) {
+      debugPrint('Error getting battery level after proof: $e');
+      _batteryAfterProof = 0;
+    }
     
     // Store the proof result for verification
-    setState(() {
-      _noirProofResult = proof;
-      _proofGenerationTime = stopwatch.elapsed;
-    });
+    if (mounted) {
+      setState(() {
+        _noirProofResult = proof;
+        _proofGenerationTime = stopwatch.elapsed;
+      });
+    }
     
     // Format the actual proof data
     return _formatNoirProofOutput(proof);
@@ -1752,10 +1827,21 @@ class _ProofResultPageState extends State<ProofResultPage> {
     // For risc0, we expect a numeric input - use first value or parse from joined string
     int numericInput = int.tryParse(inputData.first) ?? 17; // Default to 17 if parsing fails
     
-    // Capture memory and battery BEFORE proof generation
-    _freeMemoryBeforeProof = SysInfo.getFreePhysicalMemory();
-    final battery = Battery();
-    _batteryBeforeProof = await battery.batteryLevel;
+    // Capture memory and battery BEFORE proof generation (with error handling)
+    try {
+      _freeMemoryBeforeProof = SysInfo.getFreePhysicalMemory();
+    } catch (e) {
+      debugPrint('Error getting memory info: $e');
+      _freeMemoryBeforeProof = 0;
+    }
+    
+    try {
+      final battery = Battery();
+      _batteryBeforeProof = await battery.batteryLevel;
+    } catch (e) {
+      debugPrint('Error getting battery level: $e');
+      _batteryBeforeProof = 0;
+    }
     
     // Start timing
     final stopwatch = Stopwatch()..start();
@@ -1769,15 +1855,29 @@ class _ProofResultPageState extends State<ProofResultPage> {
     // Stop timing and store
     stopwatch.stop();
     
-    // Capture memory and battery AFTER proof generation
-    _freeMemoryAfterProof = SysInfo.getFreePhysicalMemory();
-    _batteryAfterProof = await battery.batteryLevel;
+    // Capture memory and battery AFTER proof generation (with error handling)
+    try {
+      _freeMemoryAfterProof = SysInfo.getFreePhysicalMemory();
+    } catch (e) {
+      debugPrint('Error getting memory info after proof: $e');
+      _freeMemoryAfterProof = 0;
+    }
+    
+    try {
+      final battery = Battery();
+      _batteryAfterProof = await battery.batteryLevel;
+    } catch (e) {
+      debugPrint('Error getting battery level after proof: $e');
+      _batteryAfterProof = 0;
+    }
     
     // Store the proof result for verification
-    setState(() {
-      _risc0ProofResult = proofResult;
-      _proofGenerationTime = stopwatch.elapsed;
-    });
+    if (mounted) {
+      setState(() {
+        _risc0ProofResult = proofResult;
+        _proofGenerationTime = stopwatch.elapsed;
+      });
+    }
     
     // Format the actual proof data
     return _formatRisc0ProofOutput(proofResult);
@@ -1791,6 +1891,8 @@ class _ProofResultPageState extends State<ProofResultPage> {
         return "assets/keccak.zkey";
       case 'blake2s256':
         return "assets/blake2s256.zkey";
+      case 'blake3':
+        return "assets/blake3.zkey";
       case 'mimc256':
         return "assets/mimc256.zkey";
       case 'pedersen':
@@ -2072,6 +2174,7 @@ Timestamp: ${DateTime.now().millisecondsSinceEpoch}
   }
 
   void _verifyProof() async {
+    if (!mounted) return;
     setState(() {
       _isVerifying = true;
     });
@@ -2146,9 +2249,11 @@ Timestamp: ${DateTime.now().millisecondsSinceEpoch}
     
     // Stop timing and store
     stopwatch.stop();
-    setState(() {
-      _proofVerificationTime = stopwatch.elapsed;
-    });
+    if (mounted) {
+      setState(() {
+        _proofVerificationTime = stopwatch.elapsed;
+      });
+    }
     
     return result;
   }
@@ -2170,9 +2275,11 @@ Timestamp: ${DateTime.now().millisecondsSinceEpoch}
     
     // Stop timing and store
     stopwatch.stop();
+    if (mounted) {
       setState(() {
-      _proofVerificationTime = stopwatch.elapsed;
-    });
+        _proofVerificationTime = stopwatch.elapsed;
+      });
+    }
     
     return result;
   }
@@ -2191,9 +2298,11 @@ Timestamp: ${DateTime.now().millisecondsSinceEpoch}
     
     // Stop timing and store
     stopwatch.stop();
-    setState(() {
-      _proofVerificationTime = stopwatch.elapsed;
-    });
+    if (mounted) {
+      setState(() {
+        _proofVerificationTime = stopwatch.elapsed;
+      });
+    }
     
     return result;
   }
@@ -2210,10 +2319,12 @@ Timestamp: ${DateTime.now().millisecondsSinceEpoch}
     
     // Stop timing and store
     stopwatch.stop();
-    setState(() {
-      _proofVerificationTime = stopwatch.elapsed;
-      _risc0VerifyResult = verifyResult;
-    });
+    if (mounted) {
+      setState(() {
+        _proofVerificationTime = stopwatch.elapsed;
+        _risc0VerifyResult = verifyResult;
+      });
+    }
     
     return verifyResult.isValid;
   }
@@ -2345,14 +2456,24 @@ Timestamp: ${DateTime.now().millisecondsSinceEpoch}
     
     // Sample memory every 100ms during proof generation
     Timer.periodic(const Duration(milliseconds: 100), (timer) {
+      if (!mounted) {
+        timer.cancel();
+        return;
+      }
+      
       if (_isGenerating) {
-        final currentFreeMemory = SysInfo.getFreePhysicalMemory();
-        final currentUsedMemory = SysInfo.getTotalPhysicalMemory() - currentFreeMemory;
-        
-        // Track peak memory usage
-        if (currentUsedMemory > _peakMemoryUsage) {
-          _peakMemoryUsage = currentUsedMemory;
-          _minFreeMemoryDuringProof = currentFreeMemory;
+        try {
+          final currentFreeMemory = SysInfo.getFreePhysicalMemory();
+          final currentUsedMemory = SysInfo.getTotalPhysicalMemory() - currentFreeMemory;
+          
+          // Track peak memory usage
+          if (currentUsedMemory > _peakMemoryUsage) {
+            _peakMemoryUsage = currentUsedMemory;
+            _minFreeMemoryDuringProof = currentFreeMemory;
+          }
+        } catch (e) {
+          debugPrint('Error monitoring memory: $e');
+          // Don't cancel timer, just skip this iteration
         }
       } else {
         timer.cancel();
