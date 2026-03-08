@@ -16,28 +16,11 @@ import 'package:battery_plus/battery_plus.dart';
 // IMP1 Integration
 import 'package:Deimos/channels/imp1_channel.dart';
 
-// Input data structure
-class InputData {
-  final String name;
-  final String description;
-  final List<String> values;
-  
-  InputData({required this.name, required this.description, required this.values});
-}
+// UI Components and Models
+import 'package:Deimos/theme/app_theme.dart';
+import 'package:Deimos/models/benchmark_models.dart';
+import 'package:Deimos/pages/batch_proof_result_page.dart';
 
-class AppTheme {
-  static const Color primary = Color(0xFF5B56E6);
-  static const Color secondary = Color(0xFF1E40AF);
-  static const Color accent = Color(0xFF00BCD4);
-  static const Color danger = Color(0xFFFF6B6B);
-  static const Color warning = Color(0xFFFFA500);
-  static const Color success = Color(0xFF10B981);
-  static const Color background = Color(0xFFF5F7FA);
-  static const Color surface = Color(0xFFFFFFFF);
-  static const Color text = Color(0xFF1A1A1A);
-  static const Color textSecondary = Color(0xFF6B7280);
-  static const Color border = Color(0xFFE5E7EB);
-}
 
 void main() {
   runApp(const MyApp());
@@ -781,27 +764,38 @@ class _MainSelectionPageState extends State<MainSelectionPage> {
                       ),
                     ],
                   )
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        canRun ? Icons.play_arrow : Icons.info_outline,
-                        size: 24,
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        canRun 
-                            ? 'Run Benchmark'
-                            : 'Select Framework, Circuit & Input',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
+                : const Text(
+                    'Run Benchmark',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
           ),
         ),
+        const SizedBox(height: 12),
+        if (_selectedFramework != null)
+          SizedBox(
+            width: double.infinity,
+            height: 50,
+            child: OutlinedButton(
+              onPressed: _isLoading ? null : _runBatchBenchmark,
+              style: OutlinedButton.styleFrom(
+                side: const BorderSide(color: AppTheme.primary, width: 2),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              child: Text(
+                'Run All ${_getFrameworkDisplayName(_selectedFramework!)} Benchmarks',
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: AppTheme.primary,
+                ),
+              ),
+            ),
+          ),
       ],
     );
   }
@@ -983,6 +977,65 @@ class _MainSelectionPageState extends State<MainSelectionPage> {
           return SlideTransition(position: offsetAnimation, child: child);
         },
         transitionDuration: const Duration(milliseconds: 250),
+      ),
+    ).then((_) {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    });
+  }
+
+  void _runBatchBenchmark() async {
+    if (_selectedFramework == null) return;
+
+    final algorithms = _getAlgorithmsForFramework(_selectedFramework!);
+    if (algorithms.isEmpty) return;
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    final List<BatchBenchmarkConfig> configs = [];
+
+    for (final algo in algorithms) {
+      final previousAlgo = _selectedAlgorithm;
+      final previousInput = _selectedInput;
+      final previousAvailable = _availableInputs;
+
+      _selectedAlgorithm = algo;
+      _updateAvailableInputs();
+
+      if (_availableInputs.isNotEmpty) {
+        configs.add(BatchBenchmarkConfig(
+          framework: _selectedFramework!,
+          algorithm: algo,
+          selectedInputName: _availableInputs.first.name,
+          selectedInputData: _availableInputs.first,
+          proofBackend: _selectedProofBackend,
+        ));
+      }
+
+      _selectedAlgorithm = previousAlgo;
+      _availableInputs = previousAvailable;
+      _selectedInput = previousInput;
+    }
+
+    if (configs.isEmpty) {
+      setState(() {
+        _isLoading = false;
+      });
+      return;
+    }
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => BatchProofResultPage(
+          configs: configs,
+          framework: _selectedFramework!,
+        ),
       ),
     ).then((_) {
       if (mounted) {
@@ -2809,3 +2862,4 @@ Timestamp: ${DateTime.now().millisecondsSinceEpoch}
     );
   }
 }
+
