@@ -45,19 +45,19 @@ class CircuitRegistry {
       ));
     }
 
-    // RISC Zero
+    // RISC Zero — uses first u32 value as the number to factor
     suite.add(BenchmarkResult(
       framework: 'risc0',
       algorithm: 'Factor',
-      inputName: 'Default',
+      inputName: 'Input 4u',
       status: BenchmarkStatus.pending,
     ));
 
-    // Cairo-M
+    // Cairo-M — SHA256 expects 16 u32 words (one 512-bit block)
     suite.add(BenchmarkResult(
       framework: 'cairo',
       algorithm: 'SHA256',
-      inputName: 'Default',
+      inputName: 'Input 16u',
       status: BenchmarkStatus.pending,
     ));
 

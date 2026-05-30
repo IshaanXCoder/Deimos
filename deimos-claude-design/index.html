@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Deimos — App Redesign</title>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: #1a1917; color: #f5f3ee; font-family: 'Inter', system-ui, sans-serif; overflow: hidden; height:100%; }
+  * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+  button { font-family: inherit; }
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-thumb { background: rgba(128,128,128,0.3); border-radius: 3px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+
+  .stage {
+    position: fixed; inset: 0; overflow: auto;
+    background: radial-gradient(circle at 20% 10%, #2a2723 0%, #14110e 55%, #0b0906 100%);
+  }
+  .phones-row {
+    display: flex; gap: 40px; padding: 60px 80px; align-items: flex-start;
+    width: max-content; min-width: 100%;
+  }
+  .screen-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+    color: rgba(245,243,238,0.5); margin-bottom: 12px;
+  }
+
+  /* Tweaks panel */
+  .tweak-panel {
+    position: fixed; bottom: 20px; right: 20px; width: 280px;
+    background: rgba(15,14,12,0.92); backdrop-filter: blur(20px);
+    border: 1px solid rgba(245,243,238,0.12); border-radius: 16px;
+    padding: 16px; color: #f5f3ee; font-family: 'Inter', sans-serif; font-size: 13px;
+    z-index: 100; box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+  .tweak-panel h3 { margin: 0 0 12px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: rgba(245,243,238,0.6); font-weight: 500; }
+  .tweak-row { margin-bottom: 12px; }
+  .tweak-row label { display:block; font-size: 11px; color: rgba(245,243,238,0.6); margin-bottom: 6px; letter-spacing: 0.3px; }
+  .tweak-seg { display: flex; background: rgba(245,243,238,0.06); border-radius: 10px; padding: 3px; }
+  .tweak-seg button { flex: 1; background: transparent; border: none; color: rgba(245,243,238,0.7); padding: 7px 4px; font-size: 11px; cursor: pointer; border-radius: 7px; font-weight: 500; transition: all .15s; }
+  .tweak-seg button.on { background: rgba(245,243,238,0.95); color: #111; }
+  .tweak-seg button:hover:not(.on) { color: #f5f3ee; }
+
+  .mini-nav {
+    position: fixed; top: 20px; left: 20px; display: flex; gap: 6px;
+    z-index: 99; font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 1.5px; text-transform: uppercase;
+  }
+  .mini-nav button {
+    background: rgba(15,14,12,0.8); backdrop-filter: blur(12px);
+    color: rgba(245,243,238,0.7); border: 1px solid rgba(245,243,238,0.1);
+    padding: 8px 12px; border-radius: 8px; cursor: pointer;
+  }
+  .mini-nav button.on { background: #f5f3ee; color: #111; border-color: #f5f3ee; }
+
+  .header-title {
+    position: fixed; top: 20px; right: 20px; z-index: 99;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 2px; text-transform: uppercase; color: rgba(245,243,238,0.5);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .header-title .dot { width: 6px; height: 6px; border-radius: 50%; background: #e9492f; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="theme.jsx"></script>
+<script type="text/babel" src="icons.jsx"></script>
+<script type="text/babel" src="data.jsx"></script>
+<script type="text/babel" src="phone.jsx"></script>
+<script type="text/babel" src="screens-instrument.jsx"></script>
+
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "mode": "dark",
+  "view": "allScreens"
+}/*EDITMODE-END*/;
+
+const SCREENS = ['onboarding','home','running','results','proof','history','compare','device'];
+const SCREEN_LABELS = {
+  onboarding: '01 · Onboarding',
+  home: '02 · Home / Configure',
+  running: '03 · Running',
+  results: '04 · Results',
+  proof: '05 · Proof data',
+  history: '06 · History',
+  compare: '07 · Compare',
+  device: '08 · Device & settings',
+};
+
+function useTweaks(){
+  const [t, setT] = useState(() => {
+    try { return { ...TWEAK_DEFAULTS, ...(JSON.parse(localStorage.getItem('deimos-tweaks')||'{}')) }; }
+    catch { return TWEAK_DEFAULTS; }
+  });
+  useEffect(()=>{ localStorage.setItem('deimos-tweaks', JSON.stringify(t)); },[t]);
+  return [t, (edits) => setT(v => ({...v, ...edits}))];
+}
+
+// Host <-> tweak bridge
+function useEditModeBridge(onEdits){
+  useEffect(()=>{
+    const handler = (e)=>{
+      if(e.data?.type === '__activate_edit_mode') window.__tweakShow?.(true);
+      if(e.data?.type === '__deactivate_edit_mode') window.__tweakShow?.(false);
+    };
+    window.addEventListener('message', handler);
+    window.parent.postMessage({type:'__edit_mode_available'},'*');
+    return () => window.removeEventListener('message', handler);
+  },[]);
+}
+
+function getScreens(){ return window.SI; }
+
+function RunFlow({theme, screen, initialState}){
+  const [state, setState] = useState(initialState || {fw:'arkworks',circuit:'poseidon2',input:'Input 1f'});
+  const [progress, setProgress] = useState(screen==='running'?0.65:0);
+  const S = getScreens();
+
+  useEffect(()=>{
+    if(screen!=='running') return;
+    let raf, start=null;
+    const tick = (t)=>{
+      if(!start) start=t;
+      const p = Math.min(1, (t-start)/3500);
+      setProgress(0.1 + p*0.8);
+      if(p<1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return ()=>cancelAnimationFrame(raf);
+  },[screen]);
+
+  const render = () => {
+    switch(screen){
+      case 'onboarding': return <S.Onboarding theme={theme} onDone={()=>{}}/>;
+      case 'home': return <><S.Home theme={theme} state={state} setState={setState} onRun={()=>{}} onNav={()=>{}}/><S.Picker theme={theme} state={state} setState={setState}/></>;
+      case 'running': return <S.Running theme={theme} state={state} progress={progress}/>;
+      case 'results': return <S.Results theme={theme} state={state} onBack={()=>{}} onNav={()=>{}}/>;
+      case 'proof': return <S.Proof theme={theme} onBack={()=>{}}/>;
+      case 'history': return <S.History theme={theme} onBack={()=>{}}/>;
+      case 'compare': return <S.Compare theme={theme} onBack={()=>{}}/>;
+      case 'device': return <S.Device theme={theme} onBack={()=>{}}/>;
+      default: return null;
+    }
+  };
+  return render();
+}
+
+// Interactive prototype wrapper
+function InteractiveApp({theme}){
+  const [screen, setScreen] = useState('onboarding');
+  const [state, setState] = useState({fw:null, circuit:null, input:null, picker:null});
+  const [progress, setProgress] = useState(0);
+  const S = getScreens();
+
+  const startRun = () => {
+    setScreen('running'); setProgress(0);
+  };
+
+  useEffect(()=>{
+    if(screen!=='running') return;
+    let raf, start=null;
+    const tick = (t)=>{
+      if(!start) start=t;
+      const p = Math.min(1, (t-start)/3200);
+      setProgress(p);
+      if(p<1) raf = requestAnimationFrame(tick);
+      else setTimeout(()=>setScreen('results'), 400);
+    };
+    raf = requestAnimationFrame(tick);
+    return ()=>cancelAnimationFrame(raf);
+  },[screen]);
+
+  const onNav = (to) => setScreen(to);
+  const onBack = () => {
+    if(['results','history','compare','device','proof'].includes(screen)) setScreen(screen==='proof'?'results':'home');
+    else if(screen==='onboarding') setScreen('home');
+    else setScreen('home');
+  };
+
+  switch(screen){
+    case 'onboarding': return <S.Onboarding theme={theme} onDone={()=>setScreen('home')}/>;
+    case 'home': return <><S.Home theme={theme} state={state} setState={setState} onRun={startRun} onNav={onNav}/><S.Picker theme={theme} state={state} setState={setState}/></>;
+    case 'running': return <S.Running theme={theme} state={state} progress={progress}/>;
+    case 'results': return <S.Results theme={theme} state={state} onBack={onBack} onNav={onNav}/>;
+    case 'proof': return <S.Proof theme={theme} onBack={()=>setScreen('results')}/>;
+    case 'history': return <S.History theme={theme} onBack={onBack}/>;
+    case 'compare': return <S.Compare theme={theme} onBack={onBack}/>;
+    case 'device': return <S.Device theme={theme} onBack={onBack}/>;
+  }
+}
+
+function App(){
+  const [tweaks, setTweaks] = useTweaks();
+  const [tweaksOpen, setTweaksOpen] = useState(false);
+  useEffect(()=>{ window.__tweakShow = setTweaksOpen; },[]);
+  useEditModeBridge();
+
+  const themeSpec = THEMES.instrument;
+  const theme = themeSpec[tweaks.mode];
+  const bezelColor = tweaks.mode==='dark' ? '#050505' : '#1a1a1a';
+
+  const setTweak = (k,v) => {
+    const edits = {[k]:v};
+    setTweaks(edits);
+    window.parent.postMessage({type:'__edit_mode_set_keys', edits},'*');
+  };
+
+  const allScreens = tweaks.view === 'allScreens';
+
+  return (
+    <div className="stage">
+      <div className="mini-nav">
+        <button className={allScreens?'on':''} onClick={()=>setTweak('view','allScreens')}>All Screens</button>
+        <button className={!allScreens?'on':''} onClick={()=>setTweak('view','interactive')}>Interactive</button>
+        <button className={tweaksOpen?'on':''} onClick={()=>setTweaksOpen(v=>!v)}>Tweaks</button>
+      </div>
+      <div className="header-title">
+        <span className="dot"/> DEIMOS · {themeSpec.name.toUpperCase()} · {tweaks.mode.toUpperCase()}
+      </div>
+
+      {allScreens ? (
+        <div className="phones-row" data-screen-label={`All screens - ${themeSpec.name}`}>
+          {SCREENS.map(s=>(
+            <div key={s} data-screen-label={SCREEN_LABELS[s]}>
+              <div className="screen-label">{SCREEN_LABELS[s]}</div>
+              <Phone theme={theme} bezelColor={bezelColor}>
+                <RunFlow theme={theme} screen={s}/>
+              </Phone>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div style={{display:'flex',justifyContent:'center',alignItems:'flex-start',padding:'60px 20px',minHeight:'100%'}} data-screen-label="Interactive prototype">
+          <Phone theme={theme} bezelColor={bezelColor}>
+            <InteractiveApp theme={theme}/>
+          </Phone>
+        </div>
+      )}
+
+      {tweaksOpen && (
+        <div className="tweak-panel">
+          <h3>Tweaks</h3>
+          <div className="tweak-row">
+            <label>Theme</label>
+            <div className="tweak-seg">
+              <button className={tweaks.mode==='light'?'on':''} onClick={()=>setTweak('mode','light')}>Light</button>
+              <button className={tweaks.mode==='dark'?'on':''} onClick={()=>setTweak('mode','dark')}>Dark</button>
+            </div>
+          </div>
+          <div className="tweak-row">
+            <label>View</label>
+            <div className="tweak-seg">
+              <button className={tweaks.view==='allScreens'?'on':''} onClick={()=>setTweak('view','allScreens')}>All screens</button>
+              <button className={tweaks.view==='interactive'?'on':''} onClick={()=>setTweak('view','interactive')}>Interactive</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

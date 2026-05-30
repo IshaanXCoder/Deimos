@@ -58,9 +58,12 @@ class BenchmarkService {
         batteryInfo: batteryInfo,
       );
     } catch (e) {
+      final errorMsg = e is PlatformException
+          ? (e.details?.toString() ?? e.message ?? e.toString())
+          : e.toString();
       return item.copyWith(
         status: BenchmarkStatus.failed,
-        error: e.toString(),
+        error: errorMsg,
       );
     }
   }
