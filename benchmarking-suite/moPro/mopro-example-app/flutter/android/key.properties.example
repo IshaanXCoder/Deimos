@@ -1,0 +1,6 @@
+# Copy to key.properties and keep that file private (it is gitignored).
+# Paths in storeFile are relative to android/app.
+storeFile=../upload-keystore.jks
+storePassword=REPLACE_WITH_PRIVATE_PASSWORD
+keyPassword=REPLACE_WITH_PRIVATE_PASSWORD
+keyAlias=upload

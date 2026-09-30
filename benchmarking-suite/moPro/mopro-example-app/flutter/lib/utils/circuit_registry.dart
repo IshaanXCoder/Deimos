@@ -5,7 +5,8 @@ class CircuitRegistry {
   static const _bytesAlgorithms = ['SHA256', 'Keccak256', 'Blake2s256', 'Blake3', 'Pedersen', 'Blake2'];
 
   // Input-name sets, mirroring the asset sizes loaded in MainSelectionPage.
-  static const _bytesGroth = ['Input 16', 'Input 32', 'Input 64', 'Input 128']; // arkworks/rapidsnark/imp1
+  // Keep these in sync with the Groth16 keys bundled in pubspec.yaml.
+  static const _bytesGroth = ['Input 16', 'Input 32']; // arkworks/rapidsnark/imp1
   static const _bytesAll = ['Input 16', 'Input 32', 'Input 64', 'Input 128', 'Input 256', 'Input 512', 'Input 1024'];
   static const _u32Cairo = ['Input 4u', 'Input 8u', 'Input 16u', 'Input 32u', 'Input 64u', 'Input 128u', 'Input 256u'];
   static const _fieldAll = ['Input 1f', 'Input 2f', 'Input 3f', 'Input 5f', 'Input 9f', 'Input 17f', 'Input 34f'];

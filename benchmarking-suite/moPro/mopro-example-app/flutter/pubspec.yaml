@@ -38,6 +38,8 @@ dependencies:
   system_info2: ^4.0.0
   battery_plus: ^6.0.3
   google_fonts: ^6.2.1
+  shared_preferences: ^2.3.0
+  url_launcher: ^6.3.0
 
 dev_dependencies:
   integration_test:
@@ -65,7 +67,46 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/barretenberg/
-    - assets/groth16/zkey/
+    # Larger Groth16 byte-input keys push the base module beyond Play's
+    # compressed download limit. The UI and batch registry offer 16/32 only.
+    - assets/groth16/zkey/blake2s256_16.zkey
+    - assets/groth16/zkey/blake2s256_32.zkey
+    - assets/groth16/zkey/blake3_16.zkey
+    - assets/groth16/zkey/blake3_32.zkey
+    - assets/groth16/zkey/keccak256_16.zkey
+    - assets/groth16/zkey/keccak256_32.zkey
+    - assets/groth16/zkey/pedersen_16.zkey
+    - assets/groth16/zkey/pedersen_32.zkey
+    - assets/groth16/zkey/sha256_16.zkey
+    - assets/groth16/zkey/sha256_32.zkey
+    - assets/groth16/zkey/mimc256_1f.zkey
+    - assets/groth16/zkey/mimc256_2f.zkey
+    - assets/groth16/zkey/mimc256_3f.zkey
+    - assets/groth16/zkey/mimc256_5f.zkey
+    - assets/groth16/zkey/mimc256_9f.zkey
+    - assets/groth16/zkey/mimc256_17f.zkey
+    - assets/groth16/zkey/mimc256_34f.zkey
+    - assets/groth16/zkey/poseidon_1f.zkey
+    - assets/groth16/zkey/poseidon_2f.zkey
+    - assets/groth16/zkey/poseidon_3f.zkey
+    - assets/groth16/zkey/poseidon_5f.zkey
+    - assets/groth16/zkey/poseidon_9f.zkey
+    - assets/groth16/zkey/poseidon_17f.zkey
+    - assets/groth16/zkey/poseidon_34f.zkey
+    - assets/groth16/zkey/poseidon2_1f.zkey
+    - assets/groth16/zkey/poseidon2_2f.zkey
+    - assets/groth16/zkey/poseidon2_3f.zkey
+    - assets/groth16/zkey/poseidon2_5f.zkey
+    - assets/groth16/zkey/poseidon2_9f.zkey
+    - assets/groth16/zkey/poseidon2_17f.zkey
+    - assets/groth16/zkey/poseidon2_34f.zkey
+    - assets/groth16/zkey/rescue-prime_1f.zkey
+    - assets/groth16/zkey/rescue-prime_2f.zkey
+    - assets/groth16/zkey/rescue-prime_3f.zkey
+    - assets/groth16/zkey/rescue-prime_5f.zkey
+    - assets/groth16/zkey/rescue-prime_9f.zkey
+    - assets/groth16/zkey/rescue-prime_17f.zkey
+    - assets/groth16/zkey/rescue-prime_34f.zkey
     - assets/groth16/vk/
     - assets/groth16/wtns/
     - inputs/input_1.json

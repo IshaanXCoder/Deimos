@@ -1,10 +1,29 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:system_info2/system_info2.dart';
 import 'package:mopro_flutter/mopro_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DeviceStatsService {
+  static const _installationIdKey = 'benchmark_installation_id';
+
+  static Future<String> _installationId() async {
+    final preferences = await SharedPreferences.getInstance();
+    final existing = preferences.getString(_installationIdKey);
+    if (existing != null && existing.isNotEmpty) return existing;
+
+    // This identifier is scoped to this app installation. It does not read an
+    // Android hardware ID or the OS build ID shared by many devices.
+    final random = Random.secure();
+    final id = List<int>.generate(16, (_) => random.nextInt(256))
+        .map((byte) => byte.toRadixString(16).padLeft(2, '0'))
+        .join();
+    await preferences.setString(_installationIdKey, id);
+    return id;
+  }
+
   static Future<Map<String, dynamic>> collectDeviceInfo(Map<String, dynamic> systemInfo) async {
     final deviceInfoPlugin = DeviceInfoPlugin();
     Map<String, dynamic> deviceData = {};
@@ -16,7 +35,7 @@ class DeviceStatsService {
           'platform': 'Android',
           'device': androidInfo.model,                  // model code, e.g. SM-A525F
           'manufacturer': androidInfo.manufacturer,
-          'deviceId': androidInfo.id,                   // one Android device -> one proof
+          'deviceId': await _installationId(),          // groups runs from this app installation
           'systemVersion': androidInfo.version.release, // OS version, e.g. 14
           ...systemInfo,
         };

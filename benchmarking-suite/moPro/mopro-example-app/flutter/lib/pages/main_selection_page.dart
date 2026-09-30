@@ -8,6 +8,7 @@ import 'package:Deimos/theme/app_theme.dart';
 import 'package:Deimos/utils/circuit_registry.dart';
 import 'package:Deimos/utils/benchmark_references.dart';
 import 'package:Deimos/widgets/instrument_widgets.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MainSelectionPage extends StatefulWidget {
   const MainSelectionPage({super.key});
@@ -17,6 +18,18 @@ class MainSelectionPage extends StatefulWidget {
 }
 
 class _MainSelectionPageState extends State<MainSelectionPage> {
+  static final Uri _privacyPolicyUrl =
+      Uri.parse('https://deimos-werw.vercel.app/privacy');
+
+  Future<void> _openPrivacyPolicy() async {
+    if (!await launchUrl(_privacyPolicyUrl, mode: LaunchMode.externalApplication) &&
+        mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Could not open the privacy policy.')),
+      );
+    }
+  }
+
   String? _selectedFramework;
   String? _selectedAlgorithm;
   String? _selectedInput;
@@ -38,7 +51,7 @@ class _MainSelectionPageState extends State<MainSelectionPage> {
 
   Future<void> _loadInputs() async {
     try {
-      final byteSizes = ['16', '32', '64', '128', '256', '512', '1028'];
+      final byteSizes = ['16', '32', '64', '128', '256', '512', '1024'];
       for (var size in byteSizes) {
         try {
           final inputData = await _loadInputFromJson(
@@ -151,7 +164,7 @@ class _MainSelectionPageState extends State<MainSelectionPage> {
     
     if (bytesAlgorithms.contains(_selectedAlgorithm)) {
       if (_selectedFramework == 'arkworks' || _selectedFramework == 'rapidsnark' || _selectedFramework == 'imp1') {
-        final allowed = ['Input 16', 'Input 32', 'Input 64', 'Input 128'];
+        final allowed = ['Input 16', 'Input 32'];
         _availableInputs = _bytesInputs.where((input) => allowed.contains(input.name)).toList();
       } else if (_selectedFramework == 'cairo') {
         _availableInputs = _u32InputsCairo;
@@ -530,8 +543,22 @@ class _MainSelectionPageState extends State<MainSelectionPage> {
               decoration: const BoxDecoration(
                 border: Border(top: BorderSide(color: AppTheme.border)),
               ),
-              child: Row(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
+                  const Text(
+                    'Completed benchmark results, inputs, and device metrics upload automatically.',
+                    style: TextStyle(fontSize: 12, color: AppTheme.textDim),
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: TextButton(
+                      onPressed: _openPrivacyPolicy,
+                      child: const Text('Privacy policy'),
+                    ),
+                  ),
+                  Row(
+                    children: [
                   Expanded(
                     child: GestureDetector(
                       onTap: canRun ? _runBenchmark : null,
@@ -588,6 +615,8 @@ class _MainSelectionPageState extends State<MainSelectionPage> {
                         color: AppTheme.text,
                       ),
                     ),
+                  ),
+                    ],
                   ),
                 ],
               ),

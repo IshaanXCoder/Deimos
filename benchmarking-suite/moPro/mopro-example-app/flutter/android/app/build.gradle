@@ -23,17 +23,34 @@ if (flutterVersionName == null) {
 }
 
 // Release signing — provide android/key.properties (gitignored, see
-// key.properties.example). If absent (local dev / CI without secrets),
-// release falls back to debug signing so builds still work.
+// key.properties.example). Never ship a bundle signed with the debug key.
 def keystoreProperties = new Properties()
 def keystorePropertiesFile = rootProject.file('key.properties')
+def moproLibraryFile = rootProject.file('../mopro_flutter_plugin/android/src/main/jniLibs/arm64-v8a/libmopro_example_app.so')
 if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+if (gradle.startParameter.taskNames.any { it.toLowerCase().contains('release') }) {
+    if (!keystorePropertiesFile.exists()) {
+        throw new GradleException('Release signing requires android/key.properties')
+    }
+    ['keyAlias', 'keyPassword', 'storeFile', 'storePassword'].each { property ->
+        if (!keystoreProperties[property]) {
+            throw new GradleException("Release signing requires ${property} in android/key.properties")
+        }
+    }
+    if (!file(keystoreProperties['storeFile']).isFile()) {
+        throw new GradleException('Release signing keystore file does not exist')
+    }
+    if (!moproLibraryFile.isFile()) {
+        throw new GradleException('Build the Android Mopro library with flutter/scripts/build_mopro_android.sh before release')
+    }
 }
 
 android {
     namespace "com.example.mopro_flutter_example"
-    compileSdk flutter.compileSdkVersion
+    compileSdk 36
+    ndkVersion "28.2.13676358"
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -49,11 +66,12 @@ android {
     }
 
     defaultConfig {
-        // Production application ID (reverse-DNS of blocsoc.iitr.ac.in).
-        // NOTE: permanent once published to Play — confirm before first upload.
-        applicationId "in.ac.iitr.blocsoc.deimos"
+        // Must match the Deimos app already created in Play Console.
+        applicationId "deimos.labs.com"
+        // IMP1 and the generated Mopro library are available for arm64 only.
+        ndk { abiFilters 'arm64-v8a' }
         minSdkVersion flutter.minSdkVersion
-        targetSdkVersion flutter.targetSdkVersion
+        targetSdkVersion 36
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
@@ -71,9 +89,7 @@ android {
 
     buildTypes {
         release {
-            // Use the real upload key when key.properties is present; otherwise
-            // fall back to debug signing so local/CI release builds still run.
-            signingConfig keystorePropertiesFile.exists() ? signingConfigs.release : signingConfigs.debug
+            signingConfig signingConfigs.release
             minifyEnabled false
             shrinkResources false
         }

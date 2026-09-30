@@ -4,20 +4,22 @@ import 'package:http/http.dart' as http;
 class ApiService {
   // Base URL is configured per-environment at build time, e.g.
   //   flutter run --dart-define=BENCHMARK_API_BASE_URL=https://api.example.com
-  // Defaults to the staging host. Prefer an HTTPS URL to avoid exposing
-  // benchmark/device data over plaintext.
+  // A release must be built with an HTTPS backend URL. No plaintext fallback.
   static const String _baseUrl = String.fromEnvironment(
     'BENCHMARK_API_BASE_URL',
-    defaultValue: 'http://3.86.145.121',
+    defaultValue: '',
   );
+
+  static bool get isConfigured => Uri.tryParse(_baseUrl)?.scheme == 'https' &&
+      Uri.tryParse(_baseUrl)?.host.isNotEmpty == true;
 
   static const String benchmarkEndpoint = '$_baseUrl/api/benchmark-result';
   static const String benchmarkBatchEndpoint = '$_baseUrl/api/benchmark-results';
 
   static Future<bool> sendBenchmarkData(Map<String, dynamic> benchmarkData) async {
+    if (!isConfigured) return false;
     try {
       print('=== Sending Data to Backend ===');
-      print('Data: ${jsonEncode(benchmarkData)}');
       
       final response = await http.post(
         Uri.parse(benchmarkEndpoint),
@@ -46,6 +48,7 @@ class ApiService {
   /// `{inserted, skipped, total}` on success, or null on failure.
   static Future<Map<String, dynamic>?> sendBenchmarkBatch(
       List<Map<String, dynamic>> results) async {
+    if (!isConfigured) return null;
     try {
       print('=== Sending Batch (${results.length}) to Backend ===');
       final response = await http
