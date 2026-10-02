@@ -164,7 +164,9 @@ class _MainSelectionPageState extends State<MainSelectionPage> {
     
     if (bytesAlgorithms.contains(_selectedAlgorithm)) {
       if (_selectedFramework == 'arkworks' || _selectedFramework == 'rapidsnark' || _selectedFramework == 'imp1') {
-        final allowed = ['Input 16', 'Input 32'];
+        final allowed = _selectedAlgorithm == 'Keccak256'
+            ? ['Input 16']
+            : ['Input 16', 'Input 32'];
         _availableInputs = _bytesInputs.where((input) => allowed.contains(input.name)).toList();
       } else if (_selectedFramework == 'cairo') {
         _availableInputs = _u32InputsCairo;

@@ -74,7 +74,6 @@ flutter:
     - assets/groth16/zkey/blake3_16.zkey
     - assets/groth16/zkey/blake3_32.zkey
     - assets/groth16/zkey/keccak256_16.zkey
-    - assets/groth16/zkey/keccak256_32.zkey
     - assets/groth16/zkey/pedersen_16.zkey
     - assets/groth16/zkey/pedersen_32.zkey
     - assets/groth16/zkey/sha256_16.zkey

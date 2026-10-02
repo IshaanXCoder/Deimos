@@ -17,7 +17,11 @@ class CircuitRegistry {
   /// input sizes the app considers valid for that circuit.
   static List<String> _inputsFor(String framework, String algorithm) {
     if (_bytesAlgorithms.contains(algorithm)) {
-      if (framework == 'arkworks' || framework == 'rapidsnark' || framework == 'imp1') return _bytesGroth;
+      if (framework == 'arkworks' || framework == 'rapidsnark' || framework == 'imp1') {
+        // The 32-byte Keccak proving key exceeds the Play base-module budget.
+        if (algorithm == 'Keccak256') return const ['Input 16'];
+        return _bytesGroth;
+      }
       if (framework == 'cairo') return _u32Cairo;
       return _bytesAll; // barretenberg, provekit
     }

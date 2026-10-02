@@ -18,6 +18,7 @@ void main() {
       expect(assets, contains(keyPath), reason: '$keyPath is offered in the batch suite');
     }
     expect(assets, isNot(contains('assets/groth16/zkey/keccak256_128.zkey')));
+    expect(assets, isNot(contains('assets/groth16/zkey/keccak256_32.zkey')));
   });
 
   testWidgets('main screen discloses automatic uploads and links the policy',
