@@ -29,4 +29,8 @@ mkdir -p "$jni_dir"
 install -m 0644 \
   "$mopro_dir/target/aarch64-linux-android/release/libmopro_example_app.so" \
   "$jni_dir/libmopro_example_app.so"
+install -m 0644 \
+  "$ndk_dir/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/libc++_shared.so" \
+  "$jni_dir/libc++_shared.so"
 echo "Installed $jni_dir/libmopro_example_app.so"
+echo "Installed $jni_dir/libc++_shared.so"

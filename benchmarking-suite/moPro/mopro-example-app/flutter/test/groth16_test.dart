@@ -1,4 +1,5 @@
 import 'package:Deimos/main.dart';
+import 'package:Deimos/utils/benchmark_references.dart';
 import 'package:Deimos/utils/circuit_registry.dart';
 import 'package:Deimos/utils/circuit_utils.dart';
 import 'package:flutter/services.dart';
@@ -10,7 +11,7 @@ void main() {
   test('every Groth16 batch selection has a bundled proving key', () async {
     final manifest = await AssetManifest.loadFromAssetBundle(rootBundle);
     final assets = manifest.listAssets().toSet();
-    final grothFrameworks = {'arkworks', 'rapidsnark', 'imp1'};
+    final grothFrameworks = {'arkworks', 'rapidsnark'};
 
     for (final item in CircuitRegistry.getFullBenchmarkSuite()) {
       if (!grothFrameworks.contains(item.framework)) continue;
@@ -19,6 +20,14 @@ void main() {
     }
     expect(assets, isNot(contains('assets/groth16/zkey/keccak256_128.zkey')));
     expect(assets, isNot(contains('assets/groth16/zkey/keccak256_32.zkey')));
+  });
+
+  test('first Play release offers six frameworks and excludes IMP1', () {
+    expect(BenchmarkReferences.frameworks.map((framework) => framework.id),
+        ['arkworks', 'rapidsnark', 'barretenberg', 'risc0', 'cairo', 'provekit']);
+    expect(CircuitRegistry.getAlgorithmsForFramework('imp1'), isEmpty);
+    expect(CircuitRegistry.getFullBenchmarkSuite()
+        .any((item) => item.framework == 'imp1'), isFalse);
   });
 
   testWidgets('main screen discloses automatic uploads and links the policy',

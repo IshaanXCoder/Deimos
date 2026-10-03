@@ -27,6 +27,7 @@ if (flutterVersionName == null) {
 def keystoreProperties = new Properties()
 def keystorePropertiesFile = rootProject.file('key.properties')
 def moproLibraryFile = rootProject.file('../mopro_flutter_plugin/android/src/main/jniLibs/arm64-v8a/libmopro_example_app.so')
+def moproCxxRuntimeFile = rootProject.file('../mopro_flutter_plugin/android/src/main/jniLibs/arm64-v8a/libc++_shared.so')
 if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
@@ -42,7 +43,7 @@ if (gradle.startParameter.taskNames.any { it.toLowerCase().contains('release') }
     if (!file(keystoreProperties['storeFile']).isFile()) {
         throw new GradleException('Release signing keystore file does not exist')
     }
-    if (!moproLibraryFile.isFile()) {
+    if (!moproLibraryFile.isFile() || !moproCxxRuntimeFile.isFile()) {
         throw new GradleException('Build the Android Mopro library with flutter/scripts/build_mopro_android.sh before release')
     }
 }
@@ -68,8 +69,11 @@ android {
     defaultConfig {
         // Must match the Deimos app already created in Play Console.
         applicationId "deimos.labs.com"
-        // IMP1 and the generated Mopro library are available for arm64 only.
-        ndk { abiFilters 'arm64-v8a' }
+        // The generated Mopro library is available for arm64 only.
+        ndk {
+            abiFilters.clear()
+            abiFilters.add('arm64-v8a')
+        }
         minSdkVersion flutter.minSdkVersion
         targetSdkVersion 36
         versionCode flutterVersionCode.toInteger()
@@ -107,7 +111,4 @@ flutter {
     source '../..'
 }
 
-dependencies {
-    // IMP1 Mobile Prover
-    implementation files('libs/imp1-0.2.2.aar')
-}
+// IMP1 is excluded from the first Play release until its SDK supports 16 KB pages.

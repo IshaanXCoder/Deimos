@@ -58,7 +58,6 @@ class CircuitRegistry {
     // on lower-memory devices. Re-enable below (single-run still supports it).
     // addAll only handles input-swept circuits; risc0 had a single fixed input.
     addAll('cairo', ['SHA256']);
-    addAll('imp1', groth16Algos);
     addAll('provekit', proveKitAlgos);
 
     return suite;
@@ -96,8 +95,6 @@ class CircuitRegistry {
         return ['Factor'];
       case 'cairo':
         return ['SHA256', 'Blake2s256', 'Blake3', 'Keccak256', 'MiMC', 'Poseidon2', 'RescuePrime'];
-      case 'imp1':
-        return ['SHA256', 'Keccak256', 'Blake2s256', 'Blake3', 'MiMC256', 'Pedersen', 'Poseidon', 'Poseidon2', 'RescuePrime'];
       case 'provekit':
         return ['Anemoi', 'MiMC', 'Poseidon', 'RescuePrime'];
       default:

@@ -14,6 +14,7 @@ import java.io.File
  * Platform channel for IMP1 proof generation and verification
  * Uses pre-bundled witness files
  */
+// Preserved optional integration, excluded from the first Play release's main source set.
 class IMP1ProverChannel(private val context: Context) : MethodChannel.MethodCallHandler {
     
     companion object {

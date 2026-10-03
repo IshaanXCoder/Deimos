@@ -23,7 +23,6 @@ class BenchmarkReferences {
     FrameworkMeta(id: 'barretenberg', name: 'Barretenberg', type: 'UltraPlonk', lang: 'C++'),
     FrameworkMeta(id: 'risc0',        name: 'RISC Zero',    type: 'STARK',      lang: 'Rust'),
     FrameworkMeta(id: 'cairo',        name: 'Cairo-M',      type: 'STARK',      lang: 'Cairo'),
-    FrameworkMeta(id: 'imp1',         name: 'IMP1',         type: 'Groth16',    lang: 'Rust'),
     FrameworkMeta(id: 'provekit',     name: 'ProveKit',     type: 'Halo2',      lang: 'Rust'),
   ];
 
@@ -35,7 +34,6 @@ class BenchmarkReferences {
     'barretenberg': 1790,
     'risc0':        6520,
     'cairo':        3995,
-    'imp1':         1780,
     'provekit':     2100,
   };
 
